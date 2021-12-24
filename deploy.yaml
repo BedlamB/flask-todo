@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-todo
+spec:
+  selector:
+    matchLabels:
+      app: flask-todo
+  replicas: 1
+  template: # template for the pods
+    metadata:
+      labels:
+        app: flask-todo
+    spec:
+      containers:
+      - name: flask-todo
+        image: flask-todo:latest
+        imagePullPolicy: Never
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-todo
+
+spec:
+  # This defines which pods are going to be represented by this Service
+  # The service becomes a network endpoint for either other services
+  # or maybe external users to connect to (eg browser)
+  selector:
+    app: flask-todo
+
+  ports:
+    - name: http
+      port: 5000
+      nodePort: 30500
+  
+  type: NodePort
